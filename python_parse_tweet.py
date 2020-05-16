@@ -2,13 +2,15 @@ import json
 import tweepy
 import sys
 import csv
+from pathlib import Path
 from datetime import date, datetime, timezone
 
 
 def parse_tweets(file_name):
 
-	with open("%s.json" % file_name, mode='r', encoding="utf-8") as tweet_data:		
-		with open('%s.csv' % file_name, mode='w', encoding="utf-8",newline='') as file:
+        Path("./result/").mkdir(parents=True, exist_ok=True)
+	with open("./results/%s.json" % file_name, mode='r', encoding="utf-8") as tweet_data:		
+		with open('./results/%s.csv' % file_name, mode='w', encoding="utf-8",newline='') as file:
 
 			writer = csv.writer(file)
 			writer.writerow(["text", "hashtags", "created_at", "is_retweet", "user_screen_name", "user_description", "user_friends_count", "user_followers_count", "user_total_tweets", "user_created_at"])
@@ -38,7 +40,7 @@ def parse_tweets(file_name):
 
 				writer.writerow([text, hashtags, created_at, is_retweet, user_screen_name, user_description, user_friends_count, user_followers_count, user_total_tweets, user_created_at])
 
-	print("Finished. Saved to %s_tweets.csv" % (file_name))
+	print("Finished. Saved to ./results/%s_tweets.csv" % (file_name))
 
 #converts Tweet date to ISO 8601 compliant string. Tweet timezones are standard UTC
 def string_to_dt(time_string):
