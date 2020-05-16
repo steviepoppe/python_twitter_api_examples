@@ -2,6 +2,7 @@ import tweepy
 import json
 import sys
 from datetime import datetime
+from pathlib import Path
 
 #Twitter API credentials
 consumer_key = 'your_consumer_key_here'
@@ -11,6 +12,7 @@ access_secret = 'your_access_secret_here'
 
 def get_timeline_tweets(screen_name):
 
+        Path("./results/").mkdir(parents=True, exist_ok=True)
 	auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 	auth.set_access_token(access_key, access_secret)
 	api = tweepy.API(auth, wait_on_rate_limit=True,wait_on_rate_limit_notify=True)
@@ -18,7 +20,7 @@ def get_timeline_tweets(screen_name):
 	tweet_count = 0; 
 	timestamp = datetime.today().strftime('%Y%m%d_%H%M%S')
 
-	with open('timeline_tweets_%s_%s.json' % (screen_name, timestamp), mode='w', encoding="utf-8") as file:
+	with open('./results/timeline_tweets_%s_%s.json' % (screen_name, timestamp), mode='w', encoding="utf-8") as file:
 		#bit of a  hacky way to create valid JSON but easier on memory
 		file.write('{"objects":[') 
 		try:
@@ -34,7 +36,7 @@ def get_timeline_tweets(screen_name):
 						
 		file.write(']}')
 
-	print("Downloaded %d tweets, Saved to timeline_tweets_%s_%s.json" % (tweet_count, screen_name, timestamp))
+	print("Downloaded %d tweets, Saved to ./results/timeline_tweets_%s_%s.json" % (tweet_count, screen_name, timestamp))
 
 if __name__ == '__main__':
     #pass in the username of the account you want to download as argument in command prompt. Feel free to replace 'sys.argv[1]' with the search target (e.g. "name").
