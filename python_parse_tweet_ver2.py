@@ -13,7 +13,7 @@ def parse_tweets(sys_args):
 	keep_rt = sys_args[3] if len(sys_args) > 3 else True
 	save_file_name = sys_args[4] if len(sys_args) > 4 else ('%s_parsed.csv' % file_name)
 	check_duplicates = sys_args[5] if len(sys_args) > 5 else False
-        Path("./result/").mkdir(parents=True, exist_ok=True)
+        Path("./results/").mkdir(parents=True, exist_ok=True)
 	
 	with open("./results/%s.json" % file_name, mode='r', encoding="utf-8") as tweet_data:		
 		with open('./results/%s.csv' % save_file_name, mode='a', encoding="utf-8",newline='') as file:
