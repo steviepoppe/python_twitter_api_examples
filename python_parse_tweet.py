@@ -8,7 +8,7 @@ from datetime import date, datetime, timezone
 
 def parse_tweets(file_name):
 
-        Path("./result/").mkdir(parents=True, exist_ok=True)
+        Path("./results/").mkdir(parents=True, exist_ok=True)
 	with open("./results/%s.json" % file_name, mode='r', encoding="utf-8") as tweet_data:		
 		with open('./results/%s.csv' % file_name, mode='w', encoding="utf-8",newline='') as file:
 
