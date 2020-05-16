@@ -2,6 +2,7 @@ import tweepy
 import sys
 import json
 from datetime import datetime
+from pathlib import Path
 
 #Twitter API credentials
 consumer_key = 'your_consumer_key_here'
@@ -14,8 +15,10 @@ def search_tweets(search_query):
 
 	tweet_count = 0
 	timestamp = datetime.today().strftime('%Y%m%d_%H%M%S')
-
-	with open('search_tweets_%s_%s.json' % (search_query, timestamp), mode='w', encoding="utf-8") as file:
+	
+        Path("./results/").mkdir(parents=True, exist_ok=True)
+	
+	with open('./results/search_tweets_%s_%s.json' % (search_query, timestamp), mode='w', encoding="utf-8") as file:
 		#bit of a  hacky way to create valid JSON but easier on memory
 		file.write('{"objects":[') 
 		try:
@@ -31,7 +34,7 @@ def search_tweets(search_query):
 						
 		file.write(']}')
 
-	print ("Downloaded %d tweets, Saved to search_tweets_%s_%s.json" % (tweet_count, search_query, timestamp))
+	print ("Downloaded %d tweets, Saved to ./results/search_tweets_%s_%s.json" % (tweet_count, search_query, timestamp))
 
 if __name__ == '__main__':
 	#pass in the keyword to search tweets	
