@@ -3,6 +3,7 @@ import csv
 import json
 import sys
 from datetime import datetime
+from pathlib import Path
 
 #Twitter API credentials
 consumer_key = 'your_consumer_key_here'
@@ -18,7 +19,7 @@ class StreamListener(tweepy.StreamListener):
 
 	def on_data(self, data):
 		try:
-			with open('stream_tweets_%s_%s.json' % (search_query, timestamp), 'a', encoding="utf-8") as file:
+			with open('./results/stream_tweets_%s_%s.json' % (search_query, timestamp), 'a', encoding="utf-8") as file:
 				global tweet_count 
 				status = json.loads(data)
 				#make sure the incoming data is actually a tweet, occasional rate related JSON gets returned at times
@@ -38,6 +39,8 @@ class StreamListener(tweepy.StreamListener):
 		return True
 
 if __name__ == '__main__':
+	
+        Path("./results/").mkdir(parents=True, exist_ok=True)
 
 	auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 	auth.set_access_token(access_key, access_secret)
@@ -46,7 +49,7 @@ if __name__ == '__main__':
 	print("Python stream started. Press ctrl-c to disconnect.")
 
 	#very hacky way of creating valid JSON but easier on memory		
-	with open('stream_tweets_%s_%s.json' % (search_query, timestamp), 'w', encoding="utf-8") as file:
+	with open('./results/stream_tweets_%s_%s.json' % (search_query, timestamp), 'w', encoding="utf-8") as file:
 		file.write('{"objects":[') 
 
 	#This line filter Twitter Streams to capture data by the command prompt input
@@ -57,7 +60,7 @@ if __name__ == '__main__':
 			stream.filter(track=[search_query])
 	except KeyboardInterrupt as e:
 		stream.disconnect() #disconnect the stream and stop streaming
-		print("Stream disconnected. Downloaded %d tweets, Saved to stream_tweets_%s_%s.json" % (tweet_count, search_query, timestamp))
+		print("Stream disconnected. Downloaded %d tweets, Saved to ./results/stream_tweets_%s_%s.json" % (tweet_count, search_query, timestamp))
 
-	with open('stream_tweets_%s_%s.json' % (search_query, timestamp), 'a') as file:
+	with open('./results/stream_tweets_%s_%s.json' % (search_query, timestamp), 'a') as file:
 		file.write(']}')
