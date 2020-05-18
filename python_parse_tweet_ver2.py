@@ -83,7 +83,17 @@ def localize_utc_object(time_string, time_zone):
 
 def remove_duplicate_rows(save_file_name):
 	with open('./results/%s.csv' % save_file_name,encoding="utf-8") as f:
+		data = list(csv.reader(f))		
 		data = list(csv.reader(f))
+
+		for row in data:
+			if row[0] not in keys:
+				new_data.append(row)
+				keys.append(row[0])
+
+	with open('./results/%s.csv' % save_file_name, 'w',encoding="utf-8",newline='') as t:
+		write = csv.writer(t)
+		write.writerows(new_data)
 		new_data = [a for i, a in enumerate(data) if a not in data[:i]]
 		with open('./results/%s.csv' % save_file_name, 'w',encoding="utf-8",newline='') as t:
 			write = csv.writer(t)
