@@ -31,7 +31,7 @@ def parse_tweets(file_name):
 					for hashtag in tweet["entities"]["hashtags"]:
 						hashtags.append(hashtag["text"])
 				#converts hashtag dict to comma-seperated string, can be commented out if original list is preferred
-				hashtags = ', '.join(hashtags)
+				hashtags = ','.join(hashtags)
 				text = (tweet["extended_tweet"]["full_text"] if "extended_tweet" in tweet else tweet["full_text"] if "full_text" in tweet else tweet["text"])
 				is_retweet = ("retweeted_status" in tweet)				
 				is_quote = ("quoted_status" in tweet)
