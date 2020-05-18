@@ -52,8 +52,8 @@ def parse_tweets(sys_args):
 				if 'user_mentions' in entities:
 					user_mentions = (("@%s" % user_mention["screen_name"]) for user_mention in entities["user_mentions"])
 
-				hashtags = ', '.join(hashtags)				
-				user_mentions = ', '.join(user_mentions)
+				hashtags = ','.join(hashtags)				
+				user_mentions = ','.join(user_mentions)
 
 				text = (tweet["extended_tweet"]["full_text"] if "extended_tweet" in tweet 
 					else tweet["full_text"] if "full_text" in tweet else tweet["text"])
