@@ -22,11 +22,11 @@ from pathlib import Path
 consumer_key = 'your_consumer_key_here'
 consumer_secret = 'your_consumer_secret_here'
 
-max_counter = 10001 
+max_counter = 10001  #set to 0 to save all tweets to one file instead of chunking in pieces
 max_id = None #Optional: Until which ID?
 since_id = None #Optional: Since which ID?
-language = 'ja' #Optional: filtering by which language? Japanese? -> 'ja'
-search_query = 'China'
+language = None #Optional: filtering by which language? Japanese? -> 'ja'
+search_query = ''
 quit = False
 
 def search_tweets(sys_args):
@@ -95,6 +95,7 @@ def process_tweets(api, search_query, timestamp, part):
 			quit = True
 		except tweepy.TweepError:
 			print("Memory error. Last tweet ID was %s" % max_id)
+
 		file.write(']}')
 
 	#To do: we don't know if we've reached the last tweet until the tweepy API call, which happens after creating
@@ -104,6 +105,10 @@ def process_tweets(api, search_query, timestamp, part):
 		print ("Downloaded %d tweets, Saved to ./results/search_tweets_%s_%s_part-%s.json" % (tweet_count, search_query, timestamp, part))
 	else:
 		os.remove("./results/search_tweets_%s_%s_part-%s.json" % (search_query, timestamp, part))
+
+	#no need to loop if all tweets are saved in one file
+	if max_counter == 0:
+		quit = True
 
 	return tweet_count
 
