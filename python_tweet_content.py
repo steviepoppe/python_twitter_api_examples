@@ -15,7 +15,6 @@ from datetime import datetime
 def parse_tweets(sys_args):
 	file_name = sys_args[1]
 	save_file_name = sys_args[2] if len(sys_args) > 2 else datetime.today().strftime('%Y%m%d_%H%M%S')
-
 	text_column = sys_args[3] if len(sys_args) > 3 else "text"
 	chunksize = 100000
 	line_count = 0
@@ -31,9 +30,7 @@ def parse_tweets(sys_args):
 			if tweet["is_retweet"] == False:
 				tweet_row = {}
 				tweet_text = neologdn.normalize(tweet[text_column], repeat=2)
-				#tweet_text = ''.join([i for i in tweet_text if i.isalpha() or i.isspace()])
 				tweet_text = clean_tweets(tweet_text, hashtags, user_mentions)
-
 				tweet_row["text"] = tweet_text.encode('cp932',"ignore").decode('cp932')
 				tweet_row["user_screen_name"] = tweet["user_screen_name"].encode('cp932',"ignore").decode('cp932')
 				print(tweet_row["user_screen_name"])
@@ -47,18 +44,10 @@ def parse_tweets(sys_args):
 
 def clean_tweets(text, hashtags, user_mentions):
 	text = reduce(lambda t, s: t.replace(s, ""), chain(hashtags, user_mentions), text)
-	text = re.sub(r'https?://\S+', '', text)
-	#text = re.sub("#|＃", "", text.replace("\n",""))	
+	text = re.sub(r'https?://\S+', '', text)	
 	text = text.lower()
 	text = re.sub('[!"#$%&\'\\\\()*+,-./:;<=>?@[\\]^_`{|}~「」〔〕“”〈〉『』【】＆＊・（）＄＃＠。、？！｀＋￥％]', ' ', text)	
-
-		# replaced_text = '\n'.join(s.strip() for s in text.splitlines()[2:] if s != '')  # skip header by [2:]
-	#text = re.sub(r'[【】]', ' ', text)	   # 【】の除去
-	#text = re.sub(r'[（）()]', ' ', text)	 # （）の除去
-	#text = re.sub(r'[［］\[\]]', ' ', text)   # ［］の除去
-	#text = re.sub(r'[@＠]\w+', '', text)  # メンションの除去
-	#text = re.sub(r'https?:\/\/.*?[\r\n ]', '', text)  # URLの除去
-	text = re.sub(r'　', ' ', text)  # 全角空白の除去
+	text = re.sub(r'　', ' ', text)
 	return text
 
 if __name__ == '__main__':
