@@ -14,9 +14,11 @@ from pathlib import Path
 # Names of the saved files are based on the search query + part number + current datetime 
 # The process can be terminated at any time using ctrl-c; the last ID will be printed before exit
 
-# Use the last ID as max_id to continue at a latter time
-# When continuing the process at a latter time (within a timespan of a week), use the first tweet_id
-# of the first tweet in the first JSON file as the since_id value
+# Use the last ID as max_id to continue mining tweets tweeted 
+# before the max time span collected until process termination
+
+# When continuing the process at a later time (within a timespan of a week), use the first tweet_id
+# of the first tweet in the first JSON file as the since_id value to continue mining from that point onwards
 
 #Twitter API credentials
 consumer_key = 'your_consumer_key_here'
