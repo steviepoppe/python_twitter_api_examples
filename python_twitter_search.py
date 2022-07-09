@@ -22,11 +22,15 @@ from pathlib import Path
 
 #Twitter API credentials
 consumer_key = 'your_consumer_key_here'
-consumer_secret = 'your_consumer_secret_here'
+consumer_secret = 'your_consumer_key_here'
+access_key = 'your_consumer_key_here'
+access_secret = 'your_consumer_key_here'
 
 max_counter = 10001  #set to 0 to save all tweets to one file instead of chunking in pieces
 max_id = None #Optional: Until which ID?
-since_id = None #Optional: Since which ID?
+since_id = 1527316759719854080 #Optional: Since which ID?
+first_id = None 
+tweet_total_count = 0
 language = None #Optional: filtering by which language? Japanese? -> 'ja'
 search_query = ''
 quit = False
@@ -35,8 +39,10 @@ def search_tweets(sys_args):
 
 	global max_id
 	global since_id
+	global first_id
 	global search_query
 	global language
+	global tweet_total_count
 
 	if len(sys_args) > 1:
 		search_query = sys_args[1]
@@ -50,7 +56,7 @@ def search_tweets(sys_args):
 	auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
 	api = tweepy.API(auth, wait_on_rate_limit=True,wait_on_rate_limit_notify=True)
 
-	tweet_total_count = 0
+	#tweet_total_count = 0
 	timestamp = datetime.today().strftime('%Y%m%d_%H%M%S')
 	part = 0
 	tweet_count = None;
@@ -64,10 +70,12 @@ def search_tweets(sys_args):
 		tweet_total_count += tweet_count
 
 	#To do: save last tweet ID in the registry in order to automatize with batch scripts
-	print ("Finished process. Downloaded %d total tweets. Last tweet ID was %s" % (tweet_total_count, max_id))
+	print ("Finished process. Downloaded %d total tweets. Last tweet ID was %s and first ID was %s" % (tweet_total_count, max_id, first_id))
 
 def process_tweets(api, search_query, timestamp, part):
 	global max_id 
+	global first_id
+	global tweet_total_count
 	global quit 
 	with open('./results/search_tweets_%s_%s_part-%s.json' % (search_query, timestamp, part), 
 		mode='w', encoding="utf-8") as file:
@@ -84,6 +92,8 @@ def process_tweets(api, search_query, timestamp, part):
 				).items(max_counter):
 				# tweepy takes max_id as first id to return: already have this so skip 
 				# (that's also why the max_counter is 10001 instead of 10k)
+				if tweet_total_count == 0 and tweet_count == 0:
+					first_id = status.id_str
 				if max_id != status.id_str:
 					max_id = status.id_str
 					#conditional operator is part of the manual JSON parsing hack
@@ -93,10 +103,10 @@ def process_tweets(api, search_query, timestamp, part):
 					if tweet_count % 100 == 0:
 						print("Downloaded %d tweets" % tweet_count)	
 		except KeyboardInterrupt:
-			print("Process terminated. Last tweet ID was %s" % max_id)
+			print("Process terminated. Last tweet ID was %s and first ID was %s" % (max_id, first_id))
 			quit = True
 		except tweepy.TweepError:
-			print("Memory error. Last tweet ID was %s" % max_id)
+			print("Memory error. Last tweet ID was %s and first ID was %s" % (max_id, first_id))
 
 		file.write(']}')
 
