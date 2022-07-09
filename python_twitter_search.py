@@ -28,7 +28,7 @@ access_secret = 'your_consumer_key_here'
 
 max_counter = 10001  #set to 0 to save all tweets to one file instead of chunking in pieces
 max_id = None #Optional: Until which ID?
-since_id = 1527316759719854080 #Optional: Since which ID?
+since_id = None #Optional: Since which ID?
 first_id = None 
 tweet_total_count = 0
 language = None #Optional: filtering by which language? Japanese? -> 'ja'
